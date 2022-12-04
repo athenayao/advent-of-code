@@ -1,8 +1,7 @@
 #! python3
-from optparse import OptionParser
 import sys
 
-def run_part_1(filename):
+def run_part_a(filename):
     with open(filename, 'r') as file:
         for raw_line in file.readlines():
             line = raw_line.strip()
@@ -10,7 +9,7 @@ def run_part_1(filename):
             # do something
 
 
-def run_part_2(filename):
+def run_part_b(filename):
     with open(filename, 'r') as file:
         for raw_line in file.readlines():
             line = raw_line.strip()
@@ -19,15 +18,15 @@ def run_part_2(filename):
 
 
 if __name__ == '__main__':
-    mode = sys.argv[1]
+    mode = sys.argv[1] if len(sys.argv) > 1 else None
     if not mode:
-        mode == "1a"
+        mode == "ax"
 
-    if mode == "1a":
-        run_part_1('./sample-input.txt')
-    elif mode == "1b":
-        run_part_1("./input.txt")
-    elif mode == "2a":
-        run_part_2('./sample-input.txt')
-    else:
-        run_part_2('./input.txt')
+    if mode == "ax":
+        run_part_a('./sample-input.txt')
+    elif mode == "a":
+        run_part_a("./input.txt")
+    elif mode == "bx":
+        run_part_b('./sample-input.txt')
+    elif mode == "b":
+        run_part_b('./input.txt')
