@@ -1,7 +1,7 @@
 #! python3
 import sys
 
-def run_part_a(filename):
+def run_part_1(filename):
     with open(filename, 'r') as file:
         for raw_line in file.readlines():
             line = raw_line.strip()
@@ -9,7 +9,7 @@ def run_part_a(filename):
             # do something
 
 
-def run_part_b(filename):
+def run_part_2(filename):
     with open(filename, 'r') as file:
         for raw_line in file.readlines():
             line = raw_line.strip()
@@ -23,10 +23,10 @@ if __name__ == '__main__':
         mode == "ax"
 
     if mode == "ax":
-        run_part_a('./sample-input.txt')
+        run_part_1('./sample-input.txt')
     elif mode == "a":
-        run_part_a("./input.txt")
+        run_part_1("./input.txt")
     elif mode == "bx":
-        run_part_b('./sample-input.txt')
+        run_part_2('./sample-input.txt')
     elif mode == "b":
-        run_part_b('./input.txt')
+        run_part_2('./input.txt')
