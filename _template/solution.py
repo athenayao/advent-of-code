@@ -23,10 +23,10 @@ if __name__ == '__main__':
         mode == "ax"
 
     if mode == "ax":
-        run_part_1('./sample-input.txt')
+        run_part_1('./example.txt')
     elif mode == "a":
         run_part_1("./input.txt")
     elif mode == "bx":
-        run_part_2('./sample-input.txt')
+        run_part_2('./example.txt')
     elif mode == "b":
         run_part_2('./input.txt')
