@@ -3,17 +3,17 @@ import sys
 from collections import namedtuple
 
 
-Point = namedtuple('Point', 'row, col')
+Point = namedtuple('Point', 'row, col, value')
 
 def move_point(point, direction):
     if direction == 'U':
-        return Point(point.row - 1, point.col)
+        return Point(point.row - 1, point.col, point.value)
     elif direction == 'D':
-        return Point(point.row + 1, point.col)
+        return Point(point.row + 1, point.col, point.value)
     elif direction == 'L':
-        return Point(point.row, point.col - 1)
+        return Point(point.row, point.col - 1, point.value)
     elif direction == 'R':
-        return Point(point.row, point.col + 1)
+        return Point(point.row, point.col + 1, point.value)
 
 def is_touching(point_1, point_2):
     return abs(point_1.row - point_2.row) <= 1 and abs(point_1.col - point_2.col) <= 1
@@ -38,8 +38,8 @@ def two_away(point_1, point_2):
 
 def run_part_1(filename):
     with open(filename, 'r') as file:
-        head = Point(0, 0)
-        tail = Point(0, 0)
+        head = Point(0, 0, 'H')
+        tail = Point(0, 0, 'T')
         seen = set()
         for raw_line in file.readlines():
             (direction, steps) = raw_line.strip().split()
@@ -79,8 +79,16 @@ def run_part_1(filename):
 def run_part_2(filename):
     with open(filename, 'r') as file:
         points = []
-        for _ in range(0, 10):
-            points.append(Point(0, 0))
+        for i in range(0, 10):
+            if i == 0:
+                points.append(Point(0, 0, 'H'))
+            else:
+                points.append(Point(0, 0, str(i)))
+
+        min_col = 0
+        max_col = 0
+        min_row = 0
+        max_row = 0
 
         seen = set()
         for raw_line in file.readlines():
@@ -89,6 +97,12 @@ def run_part_2(filename):
 
             # move head
             for _ in range(0, steps):
+                print_grid(points, f"{direction} - {steps}")
+                # min_col = min([p.col for p in points] + [min_col])
+                # max_col = max([p.col for p in points] + [max_col])
+                # min_row = min([p.row for p in points] + [min_row])
+                # max_row = max([p.row for p in points] + [max_row])
+
                 seen.add(points[-1])
 
                 points[0] = move_point(points[0], direction)
@@ -115,10 +129,46 @@ def run_part_2(filename):
                         new_col = follower.col + 1
                     else:
                         new_col = follower.col - 1
-                    points[pi] = Point(new_row, new_col)
+                    points[pi] = Point(new_row, new_col, points[pi].value)
 
+        # min_col = min([p.col for p in points] + [min_col])
+        # max_col = max([p.col for p in points] + [max_col])
+        # min_row = min([p.row for p in points] + [min_row])
+        # max_row = max([p.row for p in points] + [max_row])
         seen.add(points[-1])
+
+        print(min_col, max_col, min_row, max_row)
         print(len(seen))
+
+def print_grid(points, command):
+    points_map = {}
+    for p in points:
+        key = f'{p.col}-{p.row}'
+        if key in points_map:
+            continue
+        points_map[key] = p
+
+    min_col = -5
+    max_col = 8
+    min_row = -5
+    max_row = 3
+    
+    print()
+    print(command)
+    for row in range(min_row, max_row + 1):
+        line = []
+        for col in range(min_col, max_col + 1):
+            key = f'{col}-{row}'
+            value = points_map.get(key, None)
+            if value is None:
+                value = '.'
+            else:
+                value = value.value
+
+            line.append(value)
+        print(''.join(line))
+
+
 
 if __name__ == '__main__':
     mode = sys.argv[1] if len(sys.argv) > 1 else None
@@ -133,3 +183,4 @@ if __name__ == '__main__':
         run_part_2('./sample-input.txt')
     elif mode == "b":
         run_part_2('./input.txt')
+
