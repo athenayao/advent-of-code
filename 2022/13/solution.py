@@ -1,5 +1,6 @@
 #! python3
 import sys
+import functools
 
 def parse_token(token_array):
     return int(''.join(token_array))
@@ -99,13 +100,32 @@ def run_part_1(filename):
         print(sum(ordered_pairs), '=', ordered_pairs)
 
 
+def cmp_lines(left, right):
+    result = compare_lists(left[0], right[0])
+    if result is None:
+        return 0
+    elif result:
+        return -1
+    else:
+        return 1
 
+    
 def run_part_2(filename):
     with open(filename, 'r') as file:
-        for raw_line in file.readlines():
-            line = raw_line.strip()
-            print(".." + line)
-            # do something
+        all_lines = file.readlines()
+        divider_one = '[[2]]'
+        divider_two = '[[6]]'
+        all_lines.append(divider_one)
+        all_lines.append(divider_two)
+        all_lines = [(parse(line.strip()), line.strip()) for line in all_lines if line.strip() != '']
+
+        sorted_list = sorted(all_lines, key=functools.cmp_to_key(cmp_lines))
+
+        total = 1
+        for index, (_, raw_line) in enumerate(sorted_list):
+            if raw_line == divider_one or raw_line == divider_two:
+                total *= index + 1
+        print(total)
 
 
 if __name__ == '__main__':
