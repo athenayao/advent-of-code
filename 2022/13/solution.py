@@ -52,7 +52,8 @@ def compare_lists(left, right):
         if left_is_int and right_is_int:
             if left_item > right_item:
                 return False
-        
+            elif left_item < right_item:
+                return True
         else:
             if left_is_int:
                 left_item = [left_item]
@@ -60,9 +61,11 @@ def compare_lists(left, right):
             if right_is_int:
                 right_item = [right_item]
             
-            return compare_lists(left_item, right_item)
+            ret = compare_lists(left_item, right_item)
+            if ret is not None:
+                return ret
         
-    return True
+    return None
 
 def run_part_1(filename):
     with open(filename, 'r') as file:
@@ -71,9 +74,10 @@ def run_part_1(filename):
 
         pair_index = 0
         ordered_pairs = []
-        for raw_line in file.readlines():
+        lines = file.readlines()
+        for raw_line in lines:
             line = raw_line.strip()
-            if not line:
+            if not line or line[0] != '[':
                 continue
             
             if left is None:
@@ -92,7 +96,7 @@ def run_part_1(filename):
 
                 left = None
                 right = None
-        print(sum(ordered_pairs))
+        print(sum(ordered_pairs), '=', ordered_pairs)
 
 
 
