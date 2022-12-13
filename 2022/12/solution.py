@@ -33,13 +33,18 @@ class Directions(Enum):
     RIGHT = Point(0, 1)
 
 
-def find_path(grid, start, end, seen):
+#TODO 1: make this BFS
+def find_path(grid, start, end, seen, path = None):
     origin_value = grid.get_value(start)
 
     seen = set(seen)
     seen.add(start)
+    path = list(path)
+    path.append(start)
+    # print("path", path)
 
     if start == end:
+        # print("path", path)
         return len(seen) - 1
 
     min_len = grid.num_cells()
@@ -50,9 +55,9 @@ def find_path(grid, start, end, seen):
 
         if destination in seen:
             continue
-    
-        if grid.get_value(destination) - origin_value <= 1:
-            min_len = min(find_path(grid, destination, end, seen), min_len)
+
+        if origin_value - grid.get_value(destination) <= 1:
+            min_len = min(find_path(grid, destination, end, seen, path), min_len)
     return min_len
 
 
@@ -76,7 +81,7 @@ def run_part_1(filename):
                 row.append(char)
             grid.append(row)
 
-        print(find_path(Grid(grid), start, end, set()))
+        print(find_path(Grid(grid), end, start, set(), []))
 
 
 def run_part_2(filename):
