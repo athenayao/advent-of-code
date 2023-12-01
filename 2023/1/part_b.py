@@ -19,11 +19,11 @@ digit_words = digit_map.keys()
 
 def get_digit(line):
     if is_digit(line[0]):
-        return (int(line[0]), 1)
+        return int(line[0])
     for word in digit_words:
         if line.startswith(word):
-            return (digit_map[word], len(word))
-    return (None, 1)
+            return digit_map[word]
+    return None
     # return line.startswith(digit_words)
 
 def run(lines):
@@ -31,22 +31,23 @@ def run(lines):
     for line in lines:
         subtotal = 0
         i = 0
-        while i < len(line):
-            (digit, length) = get_digit(line[i:])
+
+        curdigit = 0
+        for i in range(0, len(line), 1):
+            digit = get_digit(line[i:])
             if digit is not None:
                 subtotal += 10 * digit
+                curdigit = digit
                 break
-            i += length 
 
-        while i < len(line):
-            (tmpdigit, length) = get_digit(line[i:])
-            if tmpdigit is not None:
-                digit = tmpdigit
-            i += length
-    
-        subtotal += digit
+        for i in range(len(line) - 1, 0, -1):
+            digit = get_digit(line[i:])
+            if digit is not None:
+                subtotal += digit
+                curdigit = 0
+                break
+        subtotal += curdigit
         print(subtotal)
-
         total += subtotal
     return total
 
