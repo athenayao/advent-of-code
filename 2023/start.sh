@@ -9,9 +9,9 @@ fi
 mkdir "$day"
 cd "$day"
 
-cp ../template.py ./part_a.py
-cp ../template.py ./part_b.py
+cp ../template.py ./a.py
+cp ../template.py ./b.py
 touch input-example.txt input.txt
-code part_a.py input-example.txt input.txt part_b.py
+code a.py input-example.txt input.txt b.py
 
 export day
