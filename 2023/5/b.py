@@ -64,9 +64,11 @@ def run(lines):
                         if cur_val >= start and cur_val <= end:
                             cur_val += dest_offset
                             break
-                    for key in seen_keys:
-                        seen[key] = cur_val
+                    seen_keys.append(seen_key)
                     cur_key = map_of_maps[cur_key]
+            for key in seen_keys:
+                seen[key] = cur_val
+            # print(seen)
             min_location = min(min_location, cur_val) if min_location is not None else cur_val
     return min_location
         
