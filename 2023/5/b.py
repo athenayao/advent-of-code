@@ -15,14 +15,14 @@ def create_map(title, numbers):
     map_from = match.group('from')
     map_to = match.group('to')
 
-    map_of_maps[map_from] = map_to
+    map_of_maps[map_to] = map_from
     ranges = []
 
     for line in numbers:
         (dest, src, length) = [int(x) for x in line.split()]
         # sorting actually seems to break this so ignore        
-        ranges.append((src, src+length, dest - src))
-        map_of_values[map_from] = ranges
+        ranges.append((dest, dest + length, src - dest))
+        map_of_values[map_to] = ranges
 
 
 def run(lines):
@@ -33,8 +33,7 @@ def run(lines):
     for x in range(0, len(seeds), 2):
         start = int(seeds[x])
         length = int(seeds[x+1])
-        seed_pairs.append((start, start + length))
-    
+        seed_pairs.append((start, start + length, 0))
 
     block = []
     for line in lines[1:]:
@@ -46,31 +45,51 @@ def run(lines):
         
     create_map(block[0], block[1:])
 
-    min_location = None
-    seen = dict()
-    for seed_pair in seed_pairs:
-        for seed in range(seed_pair[0], seed_pair[1]):
-            seen_keys = []
-            cur_val = seed
-            cur_key = 'seed'
-            while cur_key != 'location':
-                seen_key = cur_key + str(cur_val)
-                if seen_key in seen:
-                    cur_val = seen[seen_key]
-                    cur_key = 'location'
+
+    # get real max 
+    x = 0
+    while True:
+        cur_val = x
+        x += 1
+        cur_key = 'location'
+        
+        while True:
+            if cur_key == 'seed':
+                for seed_pair in seed_pairs:
+                    if cur_val >= seed_pair[0] and cur_val <= seed_pair[1]:
+                        return cur_val
+            cur_map = map_of_values.get(cur_key)
+            if not cur_map:
+                break
+
+            for (start, end, offset) in cur_map:
+                if cur_val >= start and cur_val <= end:
+                    cur_val += offset
                     break
-                else:    
-                    for (start, end, dest_offset) in map_of_values[cur_key]:
-                        if cur_val >= start and cur_val <= end:
-                            cur_val += dest_offset
-                            break
-                    seen_keys.append(seen_key)
-                    cur_key = map_of_maps[cur_key]
-            for key in seen_keys:
-                seen[key] = cur_val
-            # print(seen)
-            min_location = min(min_location, cur_val) if min_location is not None else cur_val
-    return min_location
+            cur_key = map_of_maps.get(cur_key)
+            # print(cur_key, cur_val)
+
+
+
+        # for (start, end, offset) in cur_map:
+        #     if cur_val >= statr and cur_val <= end:
+        #         cur_val += offset
+        # print(cur_key, cur_map)
+
+    # min_location = None
+    # seen = dict()
+    # for seed_pair in seed_pairs:
+    #     for seed in range(seed_pair[0], seed_pair[1]):
+    #         cur_val = seed
+    #         cur_key = 'seed'
+    #         while cur_key != 'location':            
+    #             for (start, end, dest_offset) in map_of_values[cur_key]:
+    #                 if cur_val >= start and cur_val <= end:
+    #                     cur_val += dest_offset
+    #                     break
+    #             cur_key = map_of_maps[cur_key]
+    #         min_location = min(min_location, cur_val) if min_location is not None else cur_val
+    # return min_location
         
     
 
