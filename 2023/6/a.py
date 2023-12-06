@@ -13,11 +13,12 @@ def run(lines):
     result = 1
     for (time, min_distance) in zip(times, distances):
         num_ways = 0
-        # wonder if I should bisect...
-        # ooh linear bell curve. but I'll be lazy
-        for t in range(1, time):
-            if calculate_travel(t, time) > min_distance:
+        for t in range(1, (time // 2) + 1):
+            calculate = calculate_travel(t, time)
+            if calculate > min_distance:
                 num_ways += 1
+        offset = 1 if time % 2 == 0 else 0
+        num_ways = num_ways * 2 - offset
         result *= num_ways
     return result
 
