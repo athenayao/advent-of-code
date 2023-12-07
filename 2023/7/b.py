@@ -48,10 +48,7 @@ class Type(enum.IntEnum):
         if not counted:
             counted = [0]
 
-        for i, count in enumerate(counted):
-            if count + count_joker <= 5:
-                counted[i] += count_joker
-                break
+        counted[0] += count_joker
 
         # import pdb; pdb.set_trace()
         first = counted[0]
