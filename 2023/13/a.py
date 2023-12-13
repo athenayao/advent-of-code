@@ -7,28 +7,21 @@ def check_vertical_reflection(pattern, start):
     counter = 0
 
     while True:
-        up = start - counter
-        down = start + counter + 1
+        up_ = start - counter
+        down_ = start + counter + 1
 
-        # we assume perfect reflection means that all columns would match (except maybe one along the edge)
-        if up < 0:
+        if up_ < 0:
             return start + 1
-        if down > len(pattern) - 1:
+        if down_ > len(pattern) - 1:
             return start + 1 
 
-        if pattern[up] == pattern[down]:
+        if pattern[up_] == pattern[down_]:
             counter += 1
         else:
             return -1
-        
-
-    # start, start + 1
-    # start -1, start + 2
-    # start -2, start + 3
     
 def process_pattern(pattern):
-    midpoint = len(pattern) // 2 + 1
-    for start in range(midpoint - 2, midpoint + 1):
+    for start in range(0, len(pattern) - 1):
         index = check_vertical_reflection(pattern, start)
         if index != -1:
             return 100 * index
@@ -42,8 +35,7 @@ def process_pattern(pattern):
             grid[j].append(char)
 
     pattern2 = [''.join(line) for line in grid]
-    midpoint = len(grid) // 2 + 1
-    for start in range(midpoint - 2, midpoint + 1):
+    for start in range(0, len(pattern2) - 1):
         index = check_vertical_reflection(pattern2, start)
         if index != -1:
             return index
