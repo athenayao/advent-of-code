@@ -41,8 +41,7 @@ def move(grid, start, direction, visited):
     current_point = grid[start.y][start.x]
     visited.add((start, direction))
     energized.add(start)
-    # print_grid(grid)
-    # print()
+
     new_direction = None
 
     if current_point == '.':

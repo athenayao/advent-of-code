@@ -1,11 +1,121 @@
 #!/usr/bin/python3
+from collections import namedtuple, defaultdict
 import argparse
 import sys
 import os
 
+Point = namedtuple('Point', 'x, y')
+class Point:
+    def __init__(self, x, y):
+        self.x = int(x)
+        self.y = int(y)
+    
+    def __add__(self, other):
+        return Point(self.x + other.x, self.y + other.y)
+
+    def __repr__(self):
+        return f'({self.x}, {self.y})'
+
+    def __eq__(self, other):
+        return self.x == other.x and self.y == other.y
+
+    def __hash__(self):
+        return hash((self.x, self.y))
+
+
+RIGHT = Point(1, 0)
+LEFT = Point(-1, 0)
+UP = Point(0, -1)
+DOWN = Point(0, 1)
+
+def print_grid(grid):
+    print('\n'.join([''.join(['#' if Point(x, y) in energized else '.' for x, _ in  enumerate(l)]) for y, l in enumerate(grid)]))
+
+def move(grid, start, direction, visited, energized, points):
+    if (start, direction) in visited or start.y < 0 or start.y >= len(grid) or start.x < 0 or start.x >= len(grid[0]):
+        return
+    current_point = grid[start.y][start.x]
+    visited.add((start, direction))
+    energized.add(start)
+
+    new_direction = None
+
+    if current_point == '.':
+        new_direction = direction
+    elif current_point == '\\':
+        if direction == RIGHT:
+            new_direction = DOWN
+        elif direction == LEFT:
+            new_direction = UP
+        elif direction == UP:
+            new_direction = LEFT
+        elif direction == DOWN:
+            new_direction = RIGHT
+    elif current_point == '/':
+        if direction == RIGHT:
+            new_direction = UP
+        elif direction == LEFT:
+            new_direction = DOWN
+        elif direction == UP:
+            new_direction = RIGHT
+        elif direction == DOWN:
+            new_direction = LEFT
+    elif current_point == '|':
+        if direction == UP or direction == DOWN:
+            new_direction = direction
+        else:
+            points.append((start + UP, UP))
+            points.append((start + DOWN, DOWN))
+            return
+    elif current_point == '-':
+        if direction == LEFT or direction == RIGHT:
+            new_direction = direction
+        else:
+            points.append((start + LEFT, LEFT))
+            points.append((start + RIGHT, RIGHT))
+            return
+
+    return move(grid, start + new_direction, new_direction, visited, energized, points)
+
+
+def calculate_energized(grid, start_point, start_direction):
+    energized = set()
+    points = [(start_point, start_direction)]
+    visited = set()
+    
+    while points:
+        (current_point, direction) = points.pop()
+        move(grid, current_point, direction, visited, energized, points)
+
+    return len(energized)
+
+
+
 def run(lines):
-    for line in lines:
-        print(line)
+    grid = []
+    for y, line in enumerate(lines):
+        grid.append([])
+        for x, cell in enumerate(line):
+            grid[y].append(cell)
+    
+    current_max = 0
+    # top / bottom
+    for i in range(0, len(grid[0])):
+        result = calculate_energized(grid, Point(i, 0), DOWN)
+        current_max = max(current_max, result)
+
+        result = calculate_energized(grid, Point(i, len(grid) - 1), UP)
+        current_max = max(current_max, result)
+
+    # left / right
+    for i in range(0, len(grid)):
+        result = calculate_energized(grid, Point(0, i), RIGHT)
+        current_max = max(current_max, result)
+    
+        result = calculate_energized(grid, Point(len(grid[0]) - 1, i), LEFT)
+        current_max = max(current_max, result)
+    return current_max
+    
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(prog='run.py')
