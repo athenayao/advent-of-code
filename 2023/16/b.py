@@ -64,16 +64,14 @@ def move(grid, start, direction, visited, energized, points):
         if direction == UP or direction == DOWN:
             new_direction = direction
         else:
-            points.append((start + UP, UP))
+            new_direction = UP
             points.append((start + DOWN, DOWN))
-            return
     elif current_point == '-':
         if direction == LEFT or direction == RIGHT:
             new_direction = direction
         else:
-            points.append((start + LEFT, LEFT))
+            new_direction = LEFT
             points.append((start + RIGHT, RIGHT))
-            return
 
     return move(grid, start + new_direction, new_direction, visited, energized, points)
 
