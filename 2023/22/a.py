@@ -136,13 +136,14 @@ def run(lines):
             
         bricks[i] = current_brick
     
+    print("now disintegrate")
     # now we disintegrate bricks
     # print("after: ", bricks)
     count = 0
     for i in range(0, len(bricks)):
         # print("processing", bricks[i])
         if can_disintegrate(bricks, i):
-            count += 1g
+            count += 1
     return count
 
     

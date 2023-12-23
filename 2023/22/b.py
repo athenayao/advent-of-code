@@ -20,6 +20,7 @@ class Brick:
         self.range_x = (end_1.x, end_2.x)
         self.range_y = (end_1.y, end_2.y)
         self.range_z = (end_1.z, end_2.z)
+        self.sits_on = set()
 
         self.id = brick_id
 
@@ -68,11 +69,13 @@ def run(lines):
     # min or max? maybe it doesn't matter
     sorted_bricks = sorted(bricks.values(), key=lambda brick: min(brick.range_z))
     print("make them fall")
+
     # make them fall
     # what if we have a really tall brick... do we care about the bottom or the top? hmm. maybe the bottom
     # print("before:", bricks)
     supports = defaultdict(set)
     for i, falling_brick in enumerate(sorted_bricks):
+        sits_on = set()
         current_brick = falling_brick
         hit_bottom = False
         # print(display[i], current_brick)
@@ -90,6 +93,7 @@ def run(lines):
                 if one_down.intersects(other_brick):
                     hit_bottom = True
                     supports[other_brick.id].add(current_brick.id)
+                    current_brick.sits_on.add(other_brick.id)
             if not hit_bottom:    
                 current_brick = one_down
         bricks[i] = current_brick
@@ -98,17 +102,25 @@ def run(lines):
     print(supports)
     counter = 0
     for root_brick in [*supports.keys()]:
-        to_process = [*supports[root_brick]]
+        print("ROOT_BRICK", root_brick)
+        to_process = [root_brick]
         seen = set()
+        import pdb; pdb.set_trace()
         while to_process:
-            brick_id = to_process.pop()
+            brick_id = to_process.pop(0)
+
+            sits_on = bricks[brick_id].sits_on
+            # if we have things we sit on that we haven't seen yet, that means we're supported in some way
             if brick_id in seen:
                 continue
             seen.add(brick_id)
-            to_process.extend([x for x in supports[brick_id] if x not in seen])
+            to_process.extend([x for x in supports[brick_id]])
         counter += len(seen)
-        # print("initial brick id", root_brick, "ABCDEFG"[root_brick], len(seen))
+        print("initial brick id", root_brick, "ABCDEFG"[root_brick], len(seen))
     return counter
+
+    
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(prog='run.py')
