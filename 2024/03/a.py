@@ -4,14 +4,14 @@ import sys
 import os
 import re
 
-MUL_RE = re.compile(r'mul\((\d{1,3}),(\d{1,3})\)')
+MUL_RE = re.compile(r'mul\((\d+),(\d+)\)')
 def run(lines):
-    line = lines[0]
-    pos = 0
     sum = 0
-    while match := MUL_RE.search(line, pos):
-        sum += int(match.groups()[0], 10) * int(match.groups()[1], 10)
-        pos = match.start() + 1
+    for line in lines:
+        pos = 0
+        while match := MUL_RE.search(line, pos):
+            sum += int(match.groups()[0], 10) * int(match.groups()[1], 10)
+            pos = match.start() + 1
     return sum
         
     
