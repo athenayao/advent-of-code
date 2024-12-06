@@ -106,13 +106,28 @@ def run(lines):
                 new_grid[row_index].append(cell)
     print_grid(grid)
 
+    original_visited = set()
+    original_visited.add(guard.location)
+    while True:
+        new_location = guard.peek()
+        
+        if new_location.y < 0 or new_location.y > len(grid) - 1:
+            break
+        if new_location.x < 0 or new_location.x > len(grid[0]) -1:
+            break
+
+        if grid_at(grid, new_location) != '#':
+            guard.move(new_location)
+            original_visited.add(new_location)
+        else:
+            guard.rotate()
+
+    # import pdb; pdb.set_trace()
     looped_count = 0
-    for new_obstacle_y, row in enumerate(grid):
-        for new_obstacle_x, cell in enumerate(row):
-            new_obstacle = Point(new_obstacle_y, new_obstacle_x)
-            if did_loop(Guard(original_start.y, original_start.x), grid, new_obstacle):
-                print("LOOPED AT ", new_obstacle)
-                looped_count += 1
+    for new_obstacle in original_visited:
+        if did_loop(Guard(original_start.y, original_start.x), grid, new_obstacle):
+            print("LOOPED AT ", new_obstacle)
+            looped_count += 1
 
     return looped_count
 
