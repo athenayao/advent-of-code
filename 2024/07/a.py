@@ -24,7 +24,9 @@ def mul(expected_result, total_so_far, numbers):
     total_so_far *= numbers[0]
     if mul(expected_result, total_so_far, numbers[1:]):
         return True
-    return sum(expected_result, total_so_far, numbers[1:])
+    elif sum(expected_result, total_so_far, numbers[1:]):
+        return True
+    return concat(expected_result, total_so_far, numbers[1:])
 
 def sum(expected_result, total_so_far, numbers):
     if len(numbers) == 0:
@@ -33,24 +35,21 @@ def sum(expected_result, total_so_far, numbers):
     total_so_far += numbers[0]
     if sum(expected_result, total_so_far, numbers[1:]):
         return True
-    return mul(expected_result, total_so_far, numbers[1:])
-
-# def find_equations(expected_result, numbers):
-#     operations = ['*', '+']
-#     for number in numbers:
-#         # 10, 19
-#         # 10 + 19
-#         # 10 * 19
+    elif mul(expected_result, total_so_far, numbers[1:]):
+        return True
+    return concat(expected_result, total_so_far, numbers[1:])
 
 
-#     if len(numbers) == 1:
-#         return numbers[0]
-#     r1 = find_equations(expected_result, [numbers[0]])
-#     r2 = find_equations(expected_result, numbers[1:])
+def concat(expected_result, total_so_far, numbers):
+    if len(numbers) == 0:
+        return total_so_far == expected_result
     
-    # print(r1, r2)
-    # return r1 + r2 == expected_result or r1 * r2 == expected_result
-
+    total_so_far = int('' + total_so_far + numbers[0])
+    if sum(expected_result, total_so_far, numbers[1:]):
+        return True
+    elif mul(expected_result, total_so_far, numbers[1:]):
+        return True
+    return concat(expected_result, total_so_far, numbers[1:])
 
 def run(lines):
     valid_sum = 0
