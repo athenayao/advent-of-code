@@ -73,6 +73,15 @@ def print_line(root):
         cur_span = cur_span.next_span
     print("".join(results))
 
+def find_file_id(root, file_id):
+    # now find the next processed
+    cur_span = root
+    while cur_span:
+        if cur_span.file_id == file_id:
+           break
+        cur_span = cur_span.next_span
+    return cur_span
+
 # i suspect my problem is what happens when we have multiple digits...
 # but it worked for part 1!! so maybe not
 def run(lines):
@@ -100,17 +109,20 @@ def run(lines):
                 prev_span.next_span = current_span
                 current_span.prev_span = prev_span
 
-    moving_span = current_span
+    moving_span = find_file_id(root, file_id - 1)
     current_span = root
     prev_span = None
     new_span = None
     print_line(root)
 
-    next_process = moving_span.file_id
+    current_file_id = moving_span.file_id
 
-    while next_process > 0:
+    while current_file_id >= 0:
         front_cursor = root
         while front_cursor:
+            if front_cursor.file_id == moving_span.file_id:
+                break
+
             if not front_cursor.is_empty():
                 front_cursor = front_cursor.next_span
                 continue
@@ -122,8 +134,6 @@ def run(lines):
                 new_span = Span(new_span_length, moving_span.file_id)
                 new_span.replace(front_cursor)
                 moving_span.file_id = EMPTY_SPAN
-                next_process -= 1
-
                 
                 empty_span_length = front_cursor.length - new_span_length
 
@@ -136,12 +146,8 @@ def run(lines):
             front_cursor = front_cursor.next_span
 
         # now find the next processed
-        moving_span = root
-        while True:
-            if moving_span.file_id == next_process:
-                next_process -= 1
-                break
-            moving_span = moving_span.next_span
+        current_file_id -= 1
+        moving_span = find_file_id(root, current_file_id)
             
     print_line(root)
     return calculate_checksum(root)
