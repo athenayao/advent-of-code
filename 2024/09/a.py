@@ -93,9 +93,6 @@ def run(lines):
     prev_span = None
     new_span = None
     while current_span:
-        # if current_span.file_id > moving_span.file_id:
-        #     print("this file id broke?", current_span.file_id, moving_span.file_id)
-        #     break
         if not current_span.next_span:
             break
         if current_span.is_empty():
