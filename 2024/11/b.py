@@ -1,6 +1,5 @@
 #!/usr/bin/python3
 import argparse
-import sys
 import os
 
 def update_stone(stone):
@@ -25,7 +24,6 @@ def run(lines):
     print(stones)
 
     for i in range(0, 25):
-        print("processing", i)
         stones = blink(stones)
     return len(stones)
     
