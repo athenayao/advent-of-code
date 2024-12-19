@@ -9,9 +9,14 @@ import os
 
 # instructions
 class Instructions(Enum):
-    adv = 0 # division
-    bxl = 1 # bitwise xor
-    bst = 2 # 
+    adv = 0 # division      self.a
+    bxl = 1 # bitwise xor   literal
+    bst = 2 # % 8           combo
+    jnz = 3 # infinite loop until 0
+    bxc = 4 # bitwise xor   self.b self.c
+    out = 5 # % 8 + output  combo
+    bdv = 6 # division      self.b
+    cdv = 7 # division      self.c 
 
 # operands
 # Combo operands 0 through 3 represent literal values 0 through 3.
@@ -46,7 +51,6 @@ class Program:
         while self.pointer < len(self.instructions):
             instr = self.instructions[self.pointer]
             operand = self.instructions[self.pointer + 1]
-            # import pdb; pdb.set_trace()
             if instr == 0:
                 self.adv(self.get_combo_value(operand))
             elif instr == 1:
@@ -63,7 +67,7 @@ class Program:
                 self.bdv(self.get_combo_value(operand))
             elif instr == 7: 
                 self.cdv(self.get_combo_value(operand))
-
+    
 
     def adv(self, combo):
         # division
