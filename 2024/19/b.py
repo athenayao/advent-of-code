@@ -1,29 +1,30 @@
 #!/usr/bin/python3
+import functools
 from collections import defaultdict
 import argparse
 import sys
 import os
 
-counter = 0
+@functools.cache
 def match_pattern(to_match, available):
-    global counter
     if len(to_match) == 0:
-        counter += 1
-        return
+        return 1
 
+    counter = 0
     for pattern in available:
         if to_match[0:len(pattern)] == pattern:
-            match_pattern(to_match[len(pattern):], available)
+            counter += match_pattern(to_match[len(pattern):], available)
+    return counter
 
 
 def run(lines):
-    patterns = lines[0].split(", ")
+    patterns = tuple(lines[0].split(", "))
 
+    count = 0
     for line in lines[2:]:
-        match_pattern(line, patterns)
+        count += match_pattern(line, patterns)
         
-    global counter
-    return counter
+    return count
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(prog='run.py')
