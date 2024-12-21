@@ -147,12 +147,12 @@ def run(lines):
                     if v1 == '#' or v2 == '#':
                         continue
 
-                    delta = abs(depths[p2] - depths[p1])
-                    if delta > 100:
+                    delta = abs(depths[p2] - depths[p1]) - 2
+                    if delta >= 100:
                         count += 1
                     # start = p1
                     # end = p2
-                    counts[delta - 2] += 1
+                    counts[delta] += 1
                         # print(delta)
                 # start = Point(x, y)
                 # for direction in directions:
