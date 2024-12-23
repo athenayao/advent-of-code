@@ -85,7 +85,6 @@ def find_shortest_path(grid):
 def run(lines):
     grid = Grid()
 
-
     for line in lines:
         x, y = line.split(',')
         grid.add_point(Point(int(x), int(y)))
