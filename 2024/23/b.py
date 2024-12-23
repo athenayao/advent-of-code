@@ -23,8 +23,7 @@ class Node:
         return repr(self)
 
 def find_group(nodes, start_node):
-    max_result = None
-    max_len = 0
+    max_result = []
     
     for n1 in start_node.connections:
         c1 = set(start_node.connections)
@@ -33,8 +32,7 @@ def find_group(nodes, start_node):
         c2.add(n1)
     
         common = c1 & c2
-        if len(common) > max_len:
-            max_len = len(common)
+        if len(common) > len(max_result):
             max_result = tuple(sorted([n.value for n in common]))
     return max_result
 
@@ -58,7 +56,7 @@ def run(lines):
         n2.add_connection(n1)
 
     counts = defaultdict(int)
-    for k, n in nodes.items():
+    for n in nodes.values():
         x = find_group(nodes, n)
         counts[x] += 1
     
