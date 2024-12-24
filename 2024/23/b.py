@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+import time
 from dataclasses import dataclass
 from collections import defaultdict
 import argparse
@@ -24,6 +25,7 @@ class Node:
 
 def find_group(nodes, start_node):
     max_result = []
+    results = set()
     
     for n1 in start_node.connections:
         c1 = set(start_node.connections)
@@ -32,9 +34,10 @@ def find_group(nodes, start_node):
         c2.add(n1)
     
         common = c1 & c2
+        results.add(tuple(sorted([n.value for n in common])))
         if len(common) > len(max_result):
             max_result = tuple(sorted([n.value for n in common]))
-    return max_result
+    return results
 
 def run(lines):
     nodes = {}
@@ -58,7 +61,8 @@ def run(lines):
     counts = defaultdict(int)
     for n in nodes.values():
         x = find_group(nodes, n)
-        counts[x] += 1
+        for value in x:
+            counts[value] += 1
     
     max_result = []
     for tup, count in counts.items():
@@ -67,7 +71,6 @@ def run(lines):
         if len(tup) > len(max_result):
             max_result = tup
 
-    # print(x)
     return ",".join(max_result)
 
 
@@ -80,6 +83,9 @@ if __name__ == '__main__':
 
     script_dir = os.path.dirname(__file__)
     with open(os.path.join(script_dir, filename), 'r') as f:
-        answer = run(f.read().splitlines())
+        lines = f.read().splitlines()
+        start_time = time.time()
+        answer = run(lines)
         print("### ANSWER ### ")
         print(answer)
+        print("--- %s seconds ---" % (time.time() - start_time))
